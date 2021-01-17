@@ -1,7 +1,9 @@
 ﻿using GoRogue.MapGeneration;
 using GoRogue.MapGeneration.Steps;
+using Roguelike.Cartography;
 using Roguelike.Screens;
 using SadConsole;
+using SadRogue.Primitives;
 
 namespace Roguelike
 {
@@ -9,15 +11,16 @@ namespace Roguelike
     {
         public const int Width = 100;
         public const int Height = 70;
+        public static DungeonMap DungeonMap;
 
         static void Main(string[] args)
         {
             // Setup the engine and create the main window.
-            SadConsole.Game.Create("Fonts/Buddy.font", Width, Height);
+            SadConsole.Game.Create(Width, Height, "Fonts/Buddy.font");
             Settings.ResizeMode = Settings.WindowResizeOptions.Stretch;
 
             // Hook the start event so we can add consoles to the system.
-            SadConsole.Game.OnInitialize = Init;
+            SadConsole.Game.Instance.OnStart = Init;
                         
             // Start the game.
             SadConsole.Game.Instance.Run();
@@ -27,10 +30,14 @@ namespace Roguelike
         private static void Init()
         {
             var generator = new Generator(Width, Height);
-            generator.AddSteps(new RectangleGenerator());
-            generator.Generate();
+            generator
+                .AddSteps(DefaultAlgorithms.RectangleMapSteps())
+                // .AddStep(new TranslateToDungeonMapStep())
+                .Generate();
 
-            Global.CurrentScreen = new DungeonScreen();
+            // var map = generator.Context.GetFirst<DungeonMap>();
+
+            GameHost.Instance.Screen = new DungeonScreen(generator);
         }
     }
 }

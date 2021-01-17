@@ -1,50 +1,40 @@
-﻿using Microsoft.Xna.Framework;
+﻿using GoRogue.GameFramework;
+using GoRogue.MapGeneration;
+using Roguelike.Cartography;
+using Roguelike.Entities;
 using SadConsole;
-using Color = Microsoft.Xna.Framework.Color;
-using Rectangle = Microsoft.Xna.Framework.Rectangle;
+using SadConsole.Entities;
+using SadConsole.Renderers;
+using SadRogue.Primitives;
+using SadRogue.Primitives.GridViews;
 
 namespace Roguelike.Screens
 {
-    public class DungeonScreen : ContainerConsole
+    public class DungeonScreen : ScreenObject
     {
-        private ScrollingConsole _mapConsole;
-        private ScrollingConsole _messageConsole;
+        private ScreenSurface _mapRenderer;
+        private Console _messageConsole;
         private Console _statConsole;
         private Console _inventoryConsole;
         
-        public DungeonScreen()
+        public DungeonMap Map { get; }
+
+        public DungeonScreen(Generator mapGen)
         {
-            _mapConsole = new ScrollingConsole(80, 48, new Rectangle(0, 0, 80, 48))
-            {
-                DefaultBackground = Color.Black,
-                Position = new Point(0,11)
-            };
-            _mapConsole.Print(1, 1, "Map");
-            Children.Add(_mapConsole);
+            Map = new DungeonMap(mapGen.Context.Width, mapGen.Context.Height);
+            _mapRenderer = Map.CreateRender((100,70));
+            Children.Add(_mapRenderer);
 
-            _messageConsole = new ScrollingConsole(80, 11, new Rectangle(0, 0, 80, 11))
+            Map.ApplyTerrainOverlay(mapGen.Context.GetFirst<IGridView<bool>>("WallFloor"), GetTerrain);
+            
+            var player = new GameEntity(Color.White, Color.Black, '@', (int) MapLayers.PLAYER)
             {
-                DefaultBackground = Color.Gray,
-                Position = new Point(0,Game.Height - 11)
+                Position = Map.WalkabilityView.RandomPosition(true)
             };
-            _messageConsole.Print(1, 1, "Messages");
-            Children.Add(_messageConsole);
-
-            _statConsole = new Console(20, 70)
-            {
-                DefaultBackground = Color.Brown,
-                Position = new Point(Game.Width - 20, 0)
-            };
-            _statConsole.Print(1, 1, "Stats");
-            Children.Add(_statConsole);
-
-            _inventoryConsole = new Console(80, 11)
-            {
-                DefaultBackground = Color.Cyan,
-                Position = new Point(0,0)
-            };
-            _inventoryConsole.Print(1, 1, "Inventory");
-            Children.Add(_inventoryConsole);
+            Map.AddEntity(player);
         }
+
+        private IGameObject GetTerrain(Point position, bool canWalk)
+            => canWalk ? (IGameObject)new Floor(position) : new Wall(position);
     }
 }
