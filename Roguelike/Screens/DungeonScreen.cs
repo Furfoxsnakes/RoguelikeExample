@@ -4,6 +4,7 @@ using Roguelike.Cartography;
 using Roguelike.Entities;
 using SadConsole;
 using SadConsole.Entities;
+using SadConsole.Input;
 using SadConsole.Renderers;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
@@ -24,14 +25,32 @@ namespace Roguelike.Screens
             Map = new DungeonMap(mapGen.Context.Width, mapGen.Context.Height);
             _mapRenderer = Map.CreateRender((100,70));
             Children.Add(_mapRenderer);
-
-            Map.ApplyTerrainOverlay(mapGen.Context.GetFirst<IGridView<bool>>("WallFloor"), GetTerrain);
             
-            var player = new GameEntity(Color.White, Color.Black, '@', (int) MapLayers.PLAYER)
+            GenerateMap(mapGen);
+
+            IsFocused = true;
+        }
+
+        public override bool ProcessKeyboard(Keyboard keyboard)
+        {
+            if (keyboard.IsKeyPressed(Keys.D))
+            {
+                Game.Player.Position += (1, 0);
+                Map.PlayerFOV.Calculate(Game.Player.Position, 10);
+            }
+
+            return true;
+        }
+
+        private void GenerateMap(Generator mapGen)
+        {
+            Map.ApplyTerrainOverlay(mapGen.Context.GetFirst<IGridView<bool>>("WallFloor"), GetTerrain);
+
+            Game.Player = new Player(Map)
             {
                 Position = Map.WalkabilityView.RandomPosition(true)
             };
-            Map.AddEntity(player);
+            Map.PlayerFOV.Calculate(Game.Player.Position, 10);
         }
 
         private IGameObject GetTerrain(Point position, bool canWalk)

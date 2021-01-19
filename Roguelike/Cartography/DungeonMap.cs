@@ -9,6 +9,7 @@ using GoRogue.SpatialMaps;
 using SadConsole;
 using SadConsole.Entities;
 using SadRogue.Primitives;
+using SadRogue.Primitives.GridViews;
 
 namespace Roguelike.Cartography
 {
@@ -24,11 +25,31 @@ namespace Roguelike.Cartography
     {
         private ScreenSurface _renderer;
         private Renderer _entityRenderer;
-        
+
+        private static ColoredGlyph _transparentAppearance = new ColoredGlyph(Color.Transparent, Color.Transparent);
+
         public DungeonMap(int width, int height, uint layersBlockingWalkability = 4294967295, uint layersBlockingTransparency = 4294967295, uint entityLayersSupportingMultipleItems = 4294967295, FOV? customPlayerFOV = null, AStar? customPather = null, ITaggableComponentCollection? customComponentContainer = null) : base(width, height, Enum.GetValues(typeof(MapLayers)).Length - 1, Distance.Chebyshev, layersBlockingWalkability, layersBlockingTransparency, entityLayersSupportingMultipleItems, customPlayerFOV, customPather, customComponentContainer)
         {
             ObjectAdded += OnObjectAdded;
             ObjectRemoved += OnObjectRemoved;
+
+            PlayerFOV.Recalculated += OnPlayerFOVCalculated;
+        }
+
+        private void OnPlayerFOVCalculated(object? sender, FOVRecalculatedEventArgs e)
+        {
+            foreach (var point in PlayerFOV.NewlySeen)
+            {
+                GetTerrainAt<Terrain>(point).SetForeground(Color.White);
+            }
+
+            foreach (var point in PlayerFOV.NewlyUnseen)
+            {
+                GetTerrainAt<Terrain>(point).SetForeground(Color.Gray);
+
+            }
+
+            _renderer.IsDirty = true;
         }
 
         private void OnObjectRemoved(object? sender, ItemEventArgs<IGameObject> e)
@@ -68,10 +89,11 @@ namespace Roguelike.Cartography
             _entityRenderer.AddRange(Entities.Items.Cast<Entity>());
             return _renderer;
         }
-        
+
         private void OnTerrainAppearanceChanged(object? sender, EventArgs e)
         {
             var terrtain = sender as Terrain;
+            if (!PlayerExplored[terrtain.Position]) return;
             _renderer.Surface.SetCellAppearance(terrtain.Position.X, terrtain.Position.Y, terrtain.Appearance);
             _renderer.IsDirty = true;
         }

@@ -1,6 +1,7 @@
 ﻿using GoRogue.MapGeneration;
 using GoRogue.MapGeneration.Steps;
 using Roguelike.Cartography;
+using Roguelike.Entities;
 using Roguelike.Screens;
 using SadConsole;
 using SadRogue.Primitives;
@@ -12,6 +13,7 @@ namespace Roguelike
         public const int Width = 100;
         public const int Height = 70;
         public static DungeonMap DungeonMap;
+        public static Player Player;
 
         static void Main(string[] args)
         {

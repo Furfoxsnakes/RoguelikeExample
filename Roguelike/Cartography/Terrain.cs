@@ -11,6 +11,7 @@ namespace Roguelike.Cartography
         public ColoredGlyph Appearance
         {
             get => _appearance;
+            set => _appearance = value;
         }
         private ColoredGlyph _appearance;
 
@@ -19,6 +20,12 @@ namespace Roguelike.Cartography
         public Terrain(ColoredGlyph appearance, Point position, bool isWalkable = true, bool isTransparent = true, Func<uint>? idGenerator = null, ITaggableComponentCollection? customComponentContainer = null) : base(position, 0, isWalkable, isTransparent, idGenerator, customComponentContainer)
         {
             _appearance = appearance;
+        }
+
+        public void SetForeground(Color fg)
+        {
+            Appearance.Foreground = fg;
+            AppearanceChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 }

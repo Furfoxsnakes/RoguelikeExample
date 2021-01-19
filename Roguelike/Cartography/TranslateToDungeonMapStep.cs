@@ -24,10 +24,10 @@ namespace Roguelike.Cartography
             // https://github.com/Chris3606/TheSadRogue.Integration/blob/more-feature-dev/TheSadRogue.Integration.Example/MapGeneration/TranslateToMapStep.cs
             
             // Spawn player
-            var player = new GameEntity(Color.White, Color.Black, '@', (int) MapLayers.PLAYER)
-            {
-                Position = map.WalkabilityView.RandomPosition(true)
-            };
+            // var player = new GameEntity(Color.White, Color.Black, '@', (int) MapLayers.PLAYER)
+            // {
+            //     Position = map.WalkabilityView.RandomPosition(true)
+            // };
             // map.AddEntity(player);
 
             //TODO: Spawn monsters

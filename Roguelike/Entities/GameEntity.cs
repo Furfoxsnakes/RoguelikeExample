@@ -1,4 +1,5 @@
 ﻿using System;
+using GoRogue;
 using GoRogue.Components;
 using GoRogue.GameFramework;
 using Microsoft.Xna.Framework;
@@ -18,9 +19,13 @@ namespace Roguelike.Entities
         private ITaggableComponentCollection _goRogueComponents;
         private bool _isWalkable;
 
-        public GameEntity(Color foreground, Color background, int glyph, int zIndex) : base(foreground, background, glyph, zIndex)
+        public FOV FOV;
+        
+        public GameEntity(DungeonMap map, Color foreground, Color background, int glyph, int layer) : base(foreground, background, glyph, layer)
         {
-            _layer = (int)MapLayers.PLAYER;
+            _layer = layer;
+            FOV = new FOV(map.TransparencyView);
+            map.AddEntity(this);
         }
 
         public uint ID => _id;
