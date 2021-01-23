@@ -39,15 +39,12 @@ namespace Roguelike.Cartography
         private void OnPlayerFOVCalculated(object? sender, FOVRecalculatedEventArgs e)
         {
             foreach (var point in PlayerFOV.NewlySeen)
-            {
-                GetTerrainAt<Terrain>(point).SetForeground(Color.White);
-            }
+                GetTerrainAt<Terrain>(point)?.SetForeground(Color.White);
+
 
             foreach (var point in PlayerFOV.NewlyUnseen)
-            {
-                GetTerrainAt<Terrain>(point).SetForeground(Color.Gray);
+                GetTerrainAt<Terrain>(point)?.SetForeground(Color.Gray);
 
-            }
 
             _renderer.IsDirty = true;
         }

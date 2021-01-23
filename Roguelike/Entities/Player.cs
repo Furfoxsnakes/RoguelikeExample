@@ -19,7 +19,8 @@ namespace Roguelike.Entities
 
         private void OnPlayerMoved(object? sender, GameObjectPropertyChanged<Point> e)
         {
-            Game.DungeonMap?.PlayerFOV.Calculate(Position, Awareness);
+            // Game.DungeonMap?.PlayerFOV.Calculate(Position, Awareness);
+            CurrentMap?.PlayerFOV.Calculate(Position, Awareness);
         }
     }
 }

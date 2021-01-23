@@ -8,6 +8,8 @@ namespace Roguelike.Systems
         public bool MovePlayer(Direction direction)
         {
             var player = Game.Player;
+            
+            System.Console.WriteLine(player.CurrentMap.WalkabilityView[player.Position + direction]);
 
             if (player.CanMoveIn(direction))
             {

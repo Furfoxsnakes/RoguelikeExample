@@ -2,7 +2,6 @@
 using GoRogue;
 using GoRogue.Components;
 using GoRogue.GameFramework;
-using Microsoft.Xna.Framework;
 using Roguelike.Cartography;
 using SadConsole;
 using SadConsole.Entities;
@@ -21,7 +20,7 @@ namespace Roguelike.Entities
         private bool _isWalkable;
         
         // Does not compile
-        public Map? CurrentMap { get; set; }
+        public Map? CurrentMap { get; private set; }
         public FOV FOV;
         
         public GameEntity(DungeonMap map, Color foreground, Color background, int glyph, int layer) : base(foreground, background, glyph, layer)
@@ -42,8 +41,6 @@ namespace Roguelike.Entities
 
         // Does not compile
         public void OnMapChanged(Map? newMap) => CurrentMap = newMap;
-
-        public Map? CurrentMap => _currentMap;
 
         public bool IsTransparent
         {

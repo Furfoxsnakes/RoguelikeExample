@@ -51,7 +51,8 @@ namespace Roguelike.Screens
             else if (keyboard.IsKeyPressed(Keys.Left))
                 dir = Direction.Left;
 
-            PlayerDidAct = CommandSystem.MovePlayer(dir);
+            if (dir != Direction.None)
+                PlayerDidAct = CommandSystem.MovePlayer(dir);
 
             return true;
         }
