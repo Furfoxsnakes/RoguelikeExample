@@ -44,16 +44,13 @@ namespace Roguelike.Cartography
 
             foreach (var point in PlayerFOV.NewlyUnseen)
                 GetTerrainAt<Terrain>(point)?.SetForeground(Color.Gray);
-
-
-            _renderer.IsDirty = true;
+            
         }
 
         private void OnObjectRemoved(object? sender, ItemEventArgs<IGameObject> e)
         {
             switch (e.Item)
             {
-                
                 case Entity entity:
                     _entityRenderer.Remove(entity);
                     break;
@@ -92,7 +89,6 @@ namespace Roguelike.Cartography
             var terrtain = sender as Terrain;
             if (!PlayerExplored[terrtain.Position]) return;
             _renderer.Surface.SetCellAppearance(terrtain.Position.X, terrtain.Position.Y, terrtain.Appearance);
-            _renderer.IsDirty = true;
         }
     }
 }

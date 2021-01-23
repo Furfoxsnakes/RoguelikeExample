@@ -23,10 +23,11 @@ namespace Roguelike.Entities
         public Map? CurrentMap { get; private set; }
         public FOV FOV;
         
-        public GameEntity(DungeonMap map, Color foreground, Color background, int glyph, int layer) : base(foreground, background, glyph, layer)
+        public GameEntity(DungeonMap map, Point pos, Color foreground, Color background, int glyph, int layer) : base(foreground, background, glyph, layer)
         {
             _layer = layer;
             FOV = new FOV(map.TransparencyView);
+            Position = pos;
             map.AddEntity(this);
 
             PositionChanged += OnPositionChanged;
@@ -45,7 +46,7 @@ namespace Roguelike.Entities
         public bool IsTransparent
         {
             get => _isTransparent;
-            set => _isTransparent = value;
+            set => this.SafelySetProperty(ref _isTransparent, value, TransparencyChanged);
         }
 
         public ITaggableComponentCollection GoRogueComponents => _goRogueComponents;
@@ -53,7 +54,7 @@ namespace Roguelike.Entities
         public bool IsWalkable
         {
             get => _isWalkable;
-            set => _isWalkable = value;
+            set => this.SafelySetProperty(ref _isWalkable, value, WalkabilityChanged);
         }
 
         public event EventHandler<GameObjectPropertyChanged<bool>>? TransparencyChanged;

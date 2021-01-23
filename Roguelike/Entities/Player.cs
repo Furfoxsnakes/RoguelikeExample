@@ -11,16 +11,14 @@ namespace Roguelike.Entities
         public int Awareness;
         
         // public FOV FOV;
-        public Player(DungeonMap map) : base(map,Color.White, Color.Black, '@', (int)MapLayers.PLAYER)
+        public Player(DungeonMap map, Point pos) : base(map, pos,Color.White, Color.Black, '@', (int)MapLayers.PLAYER)
         {
             Awareness = 10;
             Moved += OnPlayerMoved;
         }
 
         private void OnPlayerMoved(object? sender, GameObjectPropertyChanged<Point> e)
-        {
-            // Game.DungeonMap?.PlayerFOV.Calculate(Position, Awareness);
-            CurrentMap?.PlayerFOV.Calculate(Position, Awareness);
-        }
+            => CurrentMap?.PlayerFOV.Calculate(Position, Awareness);
+
     }
 }

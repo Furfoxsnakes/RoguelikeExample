@@ -29,7 +29,6 @@ namespace Roguelike.Screens
             CommandSystem = new CommandSystem();
             
             Map = new DungeonMap(mapGen.Context.Width, mapGen.Context.Height);
-            Game.DungeonMap = Map;
             _mapRenderer = Map.CreateRender((100,70));
             Children.Add(_mapRenderer);
             
@@ -61,10 +60,8 @@ namespace Roguelike.Screens
         {
             Map.ApplyTerrainOverlay(mapGen.Context.GetFirst<IGridView<bool>>("WallFloor"), GetTerrain);
 
-            Game.Player = new Player(Map)
-            {
-                Position = Map.WalkabilityView.RandomPosition(true)
-            };
+            var randomPosition = Map.WalkabilityView.RandomPosition(true);
+            Game.Player = new Player(Map, randomPosition);
             Map.PlayerFOV.Calculate(Game.Player.Position, 10);
         }
 

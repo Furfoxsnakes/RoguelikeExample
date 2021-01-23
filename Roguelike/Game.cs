@@ -12,7 +12,6 @@ namespace Roguelike
     {
         public const int Width = 100;
         public const int Height = 70;
-        public static DungeonMap DungeonMap;
         public static Player Player;
 
         static void Main(string[] args)
