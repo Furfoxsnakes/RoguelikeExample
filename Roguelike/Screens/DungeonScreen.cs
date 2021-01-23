@@ -2,8 +2,10 @@
 using GoRogue.MapGeneration;
 using Roguelike.Cartography;
 using Roguelike.Entities;
+using Roguelike.Systems;
 using SadConsole;
 using SadConsole.Entities;
+using SadConsole.Host;
 using SadConsole.Input;
 using SadConsole.Renderers;
 using SadRogue.Primitives;
@@ -19,10 +21,15 @@ namespace Roguelike.Screens
         private Console _inventoryConsole;
         
         public DungeonMap Map { get; }
+        public bool PlayerDidAct;
+        public CommandSystem CommandSystem { get; private set; }
 
         public DungeonScreen(Generator mapGen)
         {
+            CommandSystem = new CommandSystem();
+            
             Map = new DungeonMap(mapGen.Context.Width, mapGen.Context.Height);
+            Game.DungeonMap = Map;
             _mapRenderer = Map.CreateRender((100,70));
             Children.Add(_mapRenderer);
             
@@ -33,11 +40,18 @@ namespace Roguelike.Screens
 
         public override bool ProcessKeyboard(Keyboard keyboard)
         {
-            if (keyboard.IsKeyPressed(Keys.D))
-            {
-                Game.Player.Position += (1, 0);
-                Map.PlayerFOV.Calculate(Game.Player.Position, 10);
-            }
+            var dir = Direction.None;
+            
+            if (keyboard.IsKeyPressed(Keys.Up))
+                dir = Direction.Up;
+            else if (keyboard.IsKeyPressed(Keys.Down))
+                dir = Direction.Down;
+            else if (keyboard.IsKeyPressed(Keys.Right))
+                dir = Direction.Right;
+            else if (keyboard.IsKeyPressed(Keys.Left))
+                dir = Direction.Left;
+
+            PlayerDidAct = CommandSystem.MovePlayer(dir);
 
             return true;
         }
