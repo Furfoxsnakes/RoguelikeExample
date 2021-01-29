@@ -16,7 +16,7 @@ namespace Roguelike.Screens
     public class DungeonScreen : ScreenObject
     {
         private ScreenSurface _mapRenderer;
-        private Console _messageConsole;
+        public MessageLogConsole MessageLog;
         private Console _statConsole;
         private Console _inventoryConsole;
         
@@ -29,9 +29,10 @@ namespace Roguelike.Screens
             CommandSystem = new CommandSystem();
             
             Map = new DungeonMap(mapGen.Context.Width, mapGen.Context.Height);
-            _mapRenderer = Map.CreateRender((100,70));
-            Children.Add(_mapRenderer);
             
+            // Setup the consoles
+            GenerateConsoles();
+
             GenerateMap(mapGen);
 
             IsFocused = true;
@@ -56,13 +57,52 @@ namespace Roguelike.Screens
             return true;
         }
 
+        private void GenerateConsoles()
+        {
+            _mapRenderer = Map.CreateRender((80,48));
+            _mapRenderer.Position = (0, 11);
+            Children.Add(_mapRenderer);
+
+            MessageLog = new MessageLogConsole(80, 11)
+            {
+                // DefaultBackground = Color.Cyan,
+                Position = (0,60)
+            };
+            Children.Add(MessageLog);
+
+            _statConsole = new Console(20, 70)
+            {
+                DefaultBackground = Color.Brown,
+                Position = (Game.Width - 20, 0)
+            };
+            _statConsole.Print(1,1,"Stats");
+            Children.Add(_statConsole);
+
+            _inventoryConsole = new Console(80, 11)
+            {
+                DefaultBackground = Color.Gray,
+                Position = (0,0)
+            };
+            _inventoryConsole.Print(1, 1, "Inventory");
+            Children.Add(_inventoryConsole);
+
+        }
+
         private void GenerateMap(Generator mapGen)
         {
             Map.ApplyTerrainOverlay(mapGen.Context.GetFirst<IGridView<bool>>("WallFloor"), GetTerrain);
 
             var randomPosition = Map.WalkabilityView.RandomPosition(true);
             Game.Player = new Player(Map, randomPosition);
+            Game.Player.Moved += OnPlayerMoved;
             Map.PlayerFOV.Calculate(Game.Player.Position, 10);
+            _mapRenderer.Surface.View = _mapRenderer.Surface.View.WithCenter(Game.Player.Position);
+        }
+
+        private void OnPlayerMoved(object? sender, GameObjectPropertyChanged<Point> e)
+        {
+            _mapRenderer.Surface.View = _mapRenderer.Surface.View.WithCenter(e.NewValue);
+            Map.PlayerFOV.Calculate(e.NewValue, Game.Player.Awareness);
         }
 
         private IGameObject GetTerrain(Point position, bool canWalk)

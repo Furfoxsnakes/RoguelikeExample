@@ -13,6 +13,7 @@ namespace Roguelike
         public const int Width = 100;
         public const int Height = 70;
         public static Player Player;
+        public static DungeonScreen DungeonScreen;
 
         static void Main(string[] args)
         {
@@ -30,15 +31,17 @@ namespace Roguelike
 
         private static void Init()
         {
-            var generator = new Generator(Width, Height);
+            var generator = new Generator(100, 100);
             generator
-                .AddSteps(DefaultAlgorithms.RectangleMapSteps())
+                .AddSteps(DefaultAlgorithms.BasicRandomRoomsMapSteps(roomMinSize:7, roomMaxSize: 12))
+                // .AddSteps(DefaultAlgorithms.CellularAutomataGenerationSteps(fillProbability: 80))
                 // .AddStep(new TranslateToDungeonMapStep())
                 .Generate();
 
             // var map = generator.Context.GetFirst<DungeonMap>();
 
-            GameHost.Instance.Screen = new DungeonScreen(generator);
+            DungeonScreen = new DungeonScreen(generator);
+            GameHost.Instance.Screen = DungeonScreen;
         }
     }
 }

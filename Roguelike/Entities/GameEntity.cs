@@ -25,12 +25,12 @@ namespace Roguelike.Entities
         
         public GameEntity(DungeonMap map, Point pos, Color foreground, Color background, int glyph, int layer) : base(foreground, background, glyph, layer)
         {
+            PositionChanged += OnPositionChanged;
+
             _layer = layer;
             FOV = new FOV(map.TransparencyView);
             Position = pos;
             map.AddEntity(this);
-
-            PositionChanged += OnPositionChanged;
         }
 
         private void OnPositionChanged(object? sender, ValueChangedEventArgs<Point> e)
