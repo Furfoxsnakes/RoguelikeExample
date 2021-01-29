@@ -6,6 +6,8 @@ using GoRogue.GameFramework;
 using GoRogue.MapGeneration;
 using GoRogue.Pathing;
 using GoRogue.SpatialMaps;
+using Roguelike.Entities;
+using Roguelike.Interfaces;
 using SadConsole;
 using SadConsole.Entities;
 using SadRogue.Primitives;
@@ -82,6 +84,17 @@ namespace Roguelike.Cartography
             // add any entity associated with the map the to entity renderer
             _entityRenderer.AddRange(Entities.Items.Cast<Entity>());
             return _renderer;
+        }
+
+        public void Bump(GameEntity bumper, Point position)
+        {
+            foreach (var entity in GetObjectsAt(position))
+            {
+                foreach (var bump in entity.GoRogueComponents.GetAll<IBumpHandler>())
+                {
+                    bump.OnBump(bumper);
+                }
+            }
         }
 
         private void OnTerrainAppearanceChanged(object? sender, EventArgs e)

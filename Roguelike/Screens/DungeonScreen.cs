@@ -52,7 +52,10 @@ namespace Roguelike.Screens
                 dir = Direction.Left;
 
             if (dir != Direction.None)
-                PlayerDidAct = CommandSystem.MovePlayer(dir);
+                if (CommandSystem.MovePlayer(dir))
+                    PlayerDidAct = true;
+                else
+                    Map.Bump(Game.Player, Game.Player.Position + dir); 
 
             return true;
         }

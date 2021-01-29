@@ -1,4 +1,5 @@
-﻿using SadConsole;
+﻿using Roguelike.Components;
+using SadConsole;
 using SadRogue.Primitives;
 
 namespace Roguelike.Cartography
@@ -7,7 +8,7 @@ namespace Roguelike.Cartography
     {
         public Wall(Point position) : base(new ColoredGlyph(Color.White, Color.Black, '#'), position, false, false)
         {
-            
+            GoRogueComponents.Add(new TerrainBumpHandler());
         }
     }
 }

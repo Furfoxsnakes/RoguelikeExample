@@ -14,6 +14,7 @@ namespace Roguelike.Entities
         public Player(DungeonMap map, Point pos) : base(map, pos,Color.White, Color.Black, '@', (int)MapLayers.PLAYER)
         {
             Awareness = 10;
+            Name = "Rogue";
         }
     }
 }
