@@ -40,7 +40,7 @@ namespace Roguelike.Entities
         
         public Map? CurrentMap { get; private set; }
         private Map? _currentMap;
-        
+
         #endregion
         
         #region ICombatant
@@ -159,6 +159,8 @@ namespace Roguelike.Entities
         public GameEntity(DungeonMap map, Point pos, Color foreground, Color background, int glyph, int layer) : base(foreground, background, glyph, layer)
         {
             PositionChanged += OnPositionChanged;
+            
+            _goRogueComponents = new ComponentCollection();
 
             _layer = layer;
             FOV = new FOV(map.TransparencyView);

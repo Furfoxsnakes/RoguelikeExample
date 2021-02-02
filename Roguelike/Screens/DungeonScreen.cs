@@ -83,6 +83,14 @@ namespace Roguelike.Screens
             var randomPosition = Map.WalkabilityView.RandomPosition(true);
             Game.Player = new Player(Map, randomPosition);
             Game.Player.Moved += OnPlayerMoved;
+            
+
+            for (var i = 0; i < 10; i++)
+            {
+                var randomPos = Map.WalkabilityView.RandomPosition(true);
+                var zombie = Zombie.Create(Map, randomPos, 1);
+            }
+            
             Map.PlayerFOV.Calculate(Game.Player.Position, 10);
             _mapRenderer.Surface.View = _mapRenderer.Surface.View.WithCenter(Game.Player.Position);
         }

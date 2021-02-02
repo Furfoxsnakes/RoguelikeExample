@@ -41,12 +41,24 @@ namespace Roguelike.Cartography
         private void OnPlayerFOVCalculated(object? sender, FOVRecalculatedEventArgs e)
         {
             foreach (var point in PlayerFOV.NewlySeen)
+            {
                 GetTerrainAt<Terrain>(point)?.SetForeground(Color.White);
+
+                var entity = GetEntityAt<Monster>(point);
+                if (entity != null)
+                    entity.Appearance = entity.InFOVAppearance;
+            }
 
 
             foreach (var point in PlayerFOV.NewlyUnseen)
+            {
                 GetTerrainAt<Terrain>(point)?.SetForeground(Color.Gray);
-            
+                
+                var entity = GetEntityAt<Monster>(point);
+                if (entity != null)
+                    entity.Appearance = new ColoredGlyph(Color.Transparent, Color.Transparent);
+            }
+
         }
 
         private void OnObjectRemoved(object? sender, ItemEventArgs<IGameObject> e)

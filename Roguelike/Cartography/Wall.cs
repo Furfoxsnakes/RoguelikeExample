@@ -8,7 +8,7 @@ namespace Roguelike.Cartography
     {
         public Wall(Point position) : base(new ColoredGlyph(Color.White, Color.Black, '#'), position, false, false)
         {
-            GoRogueComponents.Add(new TerrainBumpHandler());
+            // GoRogueComponents.Add(new TerrainBumpHandler());
         }
     }
 }
