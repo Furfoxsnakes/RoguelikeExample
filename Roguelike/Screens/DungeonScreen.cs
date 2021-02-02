@@ -4,10 +4,7 @@ using Roguelike.Cartography;
 using Roguelike.Entities;
 using Roguelike.Systems;
 using SadConsole;
-using SadConsole.Entities;
-using SadConsole.Host;
 using SadConsole.Input;
-using SadConsole.Renderers;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
 
@@ -17,7 +14,7 @@ namespace Roguelike.Screens
     {
         private ScreenSurface _mapRenderer;
         public MessageLogConsole MessageLog;
-        private Console _statConsole;
+        private PlayerStatsConsole _statConsole;
         private Console _inventoryConsole;
         
         public DungeonMap Map { get; }
@@ -29,12 +26,10 @@ namespace Roguelike.Screens
             CommandSystem = new CommandSystem();
             
             Map = new DungeonMap(mapGen.Context.Width, mapGen.Context.Height);
-            
-            // Setup the consoles
-            GenerateConsoles();
-
             GenerateMap(mapGen);
-
+            
+            GenerateConsoles();
+            
             IsFocused = true;
         }
 
@@ -62,37 +57,27 @@ namespace Roguelike.Screens
 
         private void GenerateConsoles()
         {
-            _mapRenderer = Map.CreateRender((80,48));
-            _mapRenderer.Position = (0, 11);
-            Children.Add(_mapRenderer);
-
-            MessageLog = new MessageLogConsole(80, 11)
-            {
-                // DefaultBackground = Color.Cyan,
-                Position = (0,60)
-            };
+            MessageLog = new MessageLogConsole();
             Children.Add(MessageLog);
 
-            _statConsole = new Console(20, 70)
-            {
-                DefaultBackground = Color.Brown,
-                Position = (Game.Width - 20, 0)
-            };
-            _statConsole.Print(1,1,"Stats");
+            _statConsole = new PlayerStatsConsole(Game.Player);
             Children.Add(_statConsole);
 
-            _inventoryConsole = new Console(80, 11)
+            _inventoryConsole = new Console(Game.InventorySize.X, Game.InventorySize.Y)
             {
                 DefaultBackground = Color.Gray,
-                Position = (0,0)
+                Position = (Game.Width - Game.InventorySize.X, 0)
             };
             _inventoryConsole.Print(1, 1, "Inventory");
             Children.Add(_inventoryConsole);
-
         }
 
         private void GenerateMap(Generator mapGen)
         {
+            _mapRenderer = Map.CreateRender(Game.MapRenderSize);
+            _mapRenderer.Position = (Game.PlayerStatSize.X, 0);
+            Children.Add(_mapRenderer);
+            
             Map.ApplyTerrainOverlay(mapGen.Context.GetFirst<IGridView<bool>>("WallFloor"), GetTerrain);
 
             var randomPosition = Map.WalkabilityView.RandomPosition(true);

@@ -8,30 +8,27 @@ namespace Roguelike.Systems
         private static readonly int _maxLines = 9;
 
         private readonly Queue<string> _lines;
-        // private readonly Stack<string> _lines;
 
-        public MessageLogConsole(int width, int height) : base(width, height)
+        public MessageLogConsole() : base(Game.MessageLogSize.X, Game.MessageLogSize.Y)
         {
-            // _lines = new Stack<string>();
+            Position = (0, Game.Height - Height);
             _lines = new Queue<string>();
         }
 
         public void AddMessage(string message)
         {
             _lines.Enqueue(message);
-            // _lines.Push(message);
 
             if (_lines.Count > _maxLines)
                 _lines.Dequeue();
-                // _lines.Pop();
-            
+
             var lines = _lines.ToArray();
             
-            this.Clear();
+            Surface.Clear();
 
             for (int i = 0; i < _lines.Count; i++)
             {
-                Cursor.Position = (0, i);
+                Cursor.Position = (1, i + 1);
                 Cursor.Print(lines[i] + "\n");
             }
         }

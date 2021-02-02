@@ -12,9 +12,7 @@ namespace Roguelike.Systems
             var canMove = player.CanMoveIn(direction);
 
             if (canMove)
-            {
                 player.Position += direction;
-            }
 
             return canMove;
         }

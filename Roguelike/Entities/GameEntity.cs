@@ -48,13 +48,23 @@ namespace Roguelike.Entities
         public int Attack
         {
             get => _attack;
-            set => _attack = value;
+            set
+            {
+                if (value == _attack) return;
+                _attack = value;
+                OnAttackDidChange?.Invoke(this,EventArgs.Empty);
+            }
         }
 
         public int AttackChance
         {
             get => _attackChance;
-            set => _attackChance = value;
+            set
+            {
+                if (value == _attackChance) return;
+                _attackChance = value;
+                OnAttackDidChange?.Invoke(this,EventArgs.Empty);
+            }
         }
 
         public int Awareness
@@ -66,31 +76,56 @@ namespace Roguelike.Entities
         public int Defense
         {
             get => _defense;
-            set => _defense = value;
+            set
+            {
+                if (value == _defense) return;
+                _defense = value;
+                OnDefenseDidChange?.Invoke(this,EventArgs.Empty);
+            }
         }
 
         public int DefenseChance
         {
             get => _defenseChance;
-            set => _defenseChance = value;
+            set
+            {
+                if (value == _defenseChance) return;
+                _defense = value;
+                OnDefenseDidChange?.Invoke(this,EventArgs.Empty);
+            }
         }
 
         public int Gold
         {
             get => _gold;
-            set => _gold = value;
+            set
+            {
+                if (value == _gold) return;
+                _gold = value;
+                OnGoldDidChange?.Invoke(this, EventArgs.Empty);
+            }
         }
 
         public int Health
         {
             get => _health;
-            set => _health = value;
+            set
+            {
+                if (value == _health) return;
+                _health = value;
+                OnHealthDidChange?.Invoke(this, EventArgs.Empty);
+            }
         }
 
         public int MaxHealth
         {
             get => _maxHealth;
-            set => _maxHealth = value;
+            set
+            {
+                if (value == _maxHealth) return;
+                _maxHealth = value;
+                OnHealthDidChange?.Invoke(this, EventArgs.Empty);
+            }
         }
 
         public int Speed
@@ -107,6 +142,11 @@ namespace Roguelike.Entities
         private int _health;
         private int _maxHealth;
         private int _speed;
+
+        public event EventHandler OnHealthDidChange;
+        public event EventHandler OnAttackDidChange;
+        public event EventHandler OnDefenseDidChange;
+        public event EventHandler OnGoldDidChange;
 
         #endregion
         
@@ -125,11 +165,16 @@ namespace Roguelike.Entities
             Position = pos;
             map.AddEntity(this);
         }
+        
+        public void OnMapChanged(Map? newMap) => CurrentMap = newMap;
 
         private void OnPositionChanged(object? sender, ValueChangedEventArgs<Point> e)
             => Moved?.Invoke(sender, new GameObjectPropertyChanged<Point>(this, e.OldValue, e.NewValue));
         
-        public void OnMapChanged(Map? newMap) => CurrentMap = newMap;
-
+        
+        private void StatsChanged(int newValue, int oldValue, EventHandler eventHandler)
+        {
+            if (newValue == oldValue) return;
+        }
     }
 }
