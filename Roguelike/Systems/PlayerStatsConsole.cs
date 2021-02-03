@@ -45,25 +45,25 @@ namespace Roguelike.Systems
 
             _healthLabel = new Label($"Health: {player.Health}/{player.MaxHealth}")
             {
-                Position = (1, 2)
+                Position = (1, 3)
             };
             Controls.Add(_healthLabel);
 
             _attackLabel = new Label($"Attack: {player.Attack}({player.AttackChance}%)")
             {
-                Position = (1, 3)
+                Position = (1, 5)
             };
             Controls.Add(_attackLabel);
 
             _defenseLabel = new Label($"Defense: {player.Defense}({player.DefenseChance}%)")
             {
-                Position = (1,4)
+                Position = (1,7)
             };
             Controls.Add(_defenseLabel);
 
             _goldLabel = new Label($"Gold: {player.Gold}")
             {
-                Position = (1,5),
+                Position = (1,9),
                 TextColor = Color.Gold
             };
             Controls.Add(_goldLabel);

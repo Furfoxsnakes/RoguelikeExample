@@ -5,6 +5,8 @@ using Roguelike.Entities;
 using Roguelike.Systems;
 using SadConsole;
 using SadConsole.Input;
+using SadConsole.UI;
+using SadConsole.UI.Controls;
 using SadRogue.Primitives;
 using SadRogue.Primitives.GridViews;
 
@@ -16,6 +18,7 @@ namespace Roguelike.Screens
         public MessageLogConsole MessageLog;
         private PlayerStatsConsole _statConsole;
         private Console _inventoryConsole;
+        public EnemyStatsConsole EnemyStatsConsole;
         
         public DungeonMap Map { get; }
         public bool PlayerDidAct;
@@ -66,10 +69,13 @@ namespace Roguelike.Screens
             _inventoryConsole = new Console(Game.InventorySize.X, Game.InventorySize.Y)
             {
                 DefaultBackground = Color.Gray,
-                Position = (Game.Width - Game.InventorySize.X, 0)
+                Position = (0, Game.PlayerStatSize.Y)
             };
             _inventoryConsole.Print(1, 1, "Inventory");
             Children.Add(_inventoryConsole);
+
+            EnemyStatsConsole = new EnemyStatsConsole((98 / 2 + 20, 1));
+            Children.Add(EnemyStatsConsole);
         }
 
         private void GenerateMap(Generator mapGen)
@@ -84,7 +90,6 @@ namespace Roguelike.Screens
             Game.Player = new Player(Map, randomPosition);
             Game.Player.Moved += OnPlayerMoved;
             
-
             for (var i = 0; i < 10; i++)
             {
                 var randomPos = Map.WalkabilityView.RandomPosition(true);

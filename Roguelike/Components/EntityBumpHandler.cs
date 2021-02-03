@@ -17,6 +17,16 @@ namespace Roguelike.Components
             if (Parent == null) return;
             
             Game.DungeonScreen.MessageLog.AddMessage($"{entity.Name} bumps into {Parent.Name}");
+
+            Parent.Health -= 1;
+
+            if (Parent.Health > 0) return;
+            
+            if (Parent is Monster)
+            {
+                Game.DungeonScreen.MessageLog.AddMessage($"{Parent.Name} has been slain!");
+                Game.DungeonScreen.Map.RemoveEntity(Parent);
+            }
         }
     }
 }

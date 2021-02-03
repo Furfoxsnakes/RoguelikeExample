@@ -6,6 +6,7 @@ using GoRogue.GameFramework;
 using GoRogue.MapGeneration;
 using GoRogue.Pathing;
 using GoRogue.SpatialMaps;
+using Roguelike.Components;
 using Roguelike.Entities;
 using Roguelike.Interfaces;
 using SadConsole;
@@ -92,6 +93,7 @@ namespace Roguelike.Cartography
             _renderer = new ScreenSurface(cellSurface);
             _entityRenderer = new Renderer();
             _renderer.SadComponents.Add(_entityRenderer);
+            _renderer.SadComponents.Add(new MapRendererMouseProcessor(this));
             
             // add any entity associated with the map the to entity renderer
             _entityRenderer.AddRange(Entities.Items.Cast<Entity>());

@@ -13,10 +13,11 @@ namespace Roguelike
         public static Player Player;
         public static DungeonScreen DungeonScreen;
 
-        public static Point MapRenderSize = (68, 61);
-        public static Point MessageLogSize = (Width, 11);
-        public static Point InventorySize = (30, Height - MessageLogSize.Y);
-        public static Point PlayerStatSize = (30, Height - MessageLogSize.Y);
+        public static Point MapRenderSize = (98, 61);
+        public static Point PlayerStatSize = (30, 10);
+        public static Point InventorySize = (30, Height - PlayerStatSize.Y);
+        public static Point MessageLogSize = (Width - PlayerStatSize.X, 11);
+        public static Point EnemyStatsSize = (20, 2);
 
         static void Main(string[] args)
         {

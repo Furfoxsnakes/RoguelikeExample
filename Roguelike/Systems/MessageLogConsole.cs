@@ -11,7 +11,7 @@ namespace Roguelike.Systems
 
         public MessageLogConsole() : base(Game.MessageLogSize.X, Game.MessageLogSize.Y)
         {
-            Position = (0, Game.Height - Height);
+            Position = (30, Game.Height - Height);
             _lines = new Queue<string>();
         }
 
